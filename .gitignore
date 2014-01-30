@@ -1,0 +1,12 @@
+### SublimeText ###
+*.sublime-workspace
+*.sublime-project
+
+### Vim ###
+*.un~
+*~
+
+### Git ###
+!.gitkeep
+!.gitignore
+!.git*
