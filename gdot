@@ -15,6 +15,9 @@ Commands:
    track     Add files to the repository and start following changes
    untrack   Remove files from the repository and stop following changes\n"
 
+# TODO: functions I might want to have:
+#       ??()  traversing the filesystem and honoring ignores
+
 die () {
 	printf "$*" >&2
 	exit 1
