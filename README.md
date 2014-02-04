@@ -1,6 +1,6 @@
 # gdot #
 
-/ˈɡiːdoʊ/ waiting for the dead-simple dotfile manager
+/ˈɡɪdoʊ/ GID-oh/ waiting for the dead-simple dotfile manager
 
 Gdot is an extremely small deployment tool that uses Git as its back-end.
 It only has a few commands and relies on Git commands for most of the actual work.
