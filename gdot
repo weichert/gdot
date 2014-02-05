@@ -56,14 +56,11 @@ init_command () {
 
 status_command () {
 	usage_string="usage: gdot status [<options>...] [--] [<file>...]\n"
-
 	long_usage_string=\
 ""$usage_string"
 Options:
    --help     display this help
    --ignored  traverse ignored files and directories\n"
-
-	full_args="$@"
 	ignored=false
 
 	while test -n $#
@@ -105,10 +102,9 @@ $(tput setaf 1)
     .profile -> ??
 $(tput sgr0)\n"
 	printf \
-"Polluted symbolic links found:
-  Shenanigans. There are symbolic links in the deploy tree linking to existing
-  files in the work tree but they are in unexpected places or have unexpected
-  names.
+"Moved symbolic links found:
+  There are symbolic links in the deploy tree linking to existing files in the
+  work tree but they are in unexpected places or have unexpected names.
   (use \"gdot deploy --clean\" to clean up and update all symbolic links)
 $(tput setaf 1)
     .testfile -> .bashrc
