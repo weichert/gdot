@@ -31,7 +31,8 @@ die () {
 }
 
 __git () {
-	exit $?
+	git "$@"
+	return $?
 }
 
 clean_command () {
