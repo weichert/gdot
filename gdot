@@ -27,7 +27,40 @@ die () {
 	exit 1
 }
 
-find_symlinks () {
+ls-files () {
+	usage_string="usage: gdot ls-files [<options>...]\n"
+	long_usage_string=\
+""$usage_string"
+Options:
+   --broken-links  
+   --conflicts     
+   --help          display this help
+   --moved-links   
+   --no-links      
+   --valid-links   \n"
+
+	while test -n $#
+	do
+		case "$1" in
+		--broken-links)
+			;;
+		--conflicts)
+			;;
+		--help)
+			printf "$long_usage_string"
+			return 0 ;;
+		--moved-links)
+			;;
+		--no-links)
+			;;
+		--valid-links)
+			;;
+		-*|--*)
+			die "Unknown option: "$1"\n"$usage_string"" ;;
+		*)
+			die "Unknown argument: "$1"\n"$usage_string"" ;;
+		esac
+	done
 
 	return 0
 }
@@ -188,6 +221,9 @@ then
 		init)
 			init_command --help
 			exit $?;;
+		ls-files)
+			ls-files --help
+			exit $?;;
 		status)
 			status_command --help
 			exit $?;;
@@ -219,6 +255,10 @@ then
 	init)
 		shift
 		init_command "$@"
+		exit $?;;
+	ls-files)
+		shift
+		ls-files "$@"
 		exit $?;;
 	status)
 		shift
