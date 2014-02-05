@@ -27,7 +27,7 @@ die () {
 	exit 1
 }
 
-ls-files () {
+ls_files () {
 	usage_string="usage: gdot ls-files [<options>...]\n"
 	long_usage_string=\
 ""$usage_string"
@@ -65,17 +65,17 @@ Options:
 	return 0
 }
 
-clean_command () {
+clean () {
 	# TODO: --ignored  traverse ignored files and directories
 	return 0
 }
 
-deploy_command () {
+deploy () {
 	# TODO: --clean
 	return 0
 }
 
-git_command () {
+__git () {
 	git "$@"
 	return $?
 }
@@ -84,7 +84,7 @@ git_command () {
 #  INIT COMMAND
 #
 
-init_command () {
+init () {
 	usage_string="usage: gdot init [<options>...]\n"
 	long_usage_string=\
 ""$usage_string"
@@ -93,6 +93,7 @@ Options:
 
 	while test -n $#
 	do
+		echo $#
 		case "$1" in
 		--help)
 			printf "$long_usage_string"
@@ -103,7 +104,7 @@ Options:
 			die "Unknown argument: "$1"\n"$usage_string"" ;;
 		esac
 	done
-	git init $GIT_WORK_TREE
+	__git init $GIT_WORK_TREE
 	return $?
 }
 
@@ -111,7 +112,7 @@ Options:
 #  STATUS COMMAND
 #
 
-status_command () {
+status () {
 	usage_string="usage: gdot status [<options>...] [--] [<file>...]\n"
 	long_usage_string=\
 ""$usage_string"
@@ -178,11 +179,11 @@ $(tput sgr0)\n"
 	return 0
 }
 
-track_command () {
+track () {
 	return 0
 }
 
-untrack_command () {
+untrack () {
 	# TODO: --clean
 	return 0
 }
@@ -213,25 +214,25 @@ then
 	--help)
 		case "$2" in
 		clean)
-			clean_command --help
+			clean --help
 			exit $?;;
 		deploy)
-			deploy_command --help
+			deploy --help
 			exit $?;;
 		init)
-			init_command --help
+			init --help
 			exit $?;;
 		ls-files)
-			ls-files --help
+			ls_files --help
 			exit $?;;
 		status)
-			status_command --help
+			status --help
 			exit $?;;
 		track)
-			track_command --help
+			track --help
 			exit $?;;
 		untrack)
-			untrack_command --help
+			untrack --help
 			exit $?;;
 		*)
 			printf "$long_usage_string"
@@ -242,35 +243,35 @@ then
 		die "Unknown option: "$1"\n"$usage_string"" ;;
 	clean)
 		shift
-		clean_command "$@" 
+		clean "$@"
 		exit $?;;
 	deploy)
 		shift
-		deploy_command "$@"
+		deploy "$@"
 		exit $?;;
 	git)
 		shift
-		git_command "$@"
+		__git "$@"
 		exit $?;;
 	init)
 		shift
-		init_command "$@"
+		init "$@"
 		exit $?;;
 	ls-files)
 		shift
-		ls-files "$@"
+		ls_files "$@"
 		exit $?;;
 	status)
 		shift
-		status_command "$@"
+		status "$@"
 		exit $?;;
 	track)
 		shift
-		track_command "$@"
+		track "$@"
 		exit $?;;
 	untrack)
 		shift
-		untrack_command "$@"
+		untrack "$@"
 		exit $?;;
 	*)
 		die "gdot: '"$1"' is not a gdot command. See 'gdot --help'.\n" ;;
