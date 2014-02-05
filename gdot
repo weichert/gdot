@@ -39,7 +39,7 @@ Options:
    --no-links      
    --valid-links   \n"
 
-	while test -n $#
+	while test $# != 0
 	do
 		case "$1" in
 		--broken-links)
@@ -91,7 +91,7 @@ init () {
 Options:
    --help     display this help\n"
 
-	while test -n $#
+	while test $# != 0
 	do
 		echo $#
 		case "$1" in
@@ -121,7 +121,7 @@ Options:
    --ignored  traverse ignored files and directories\n"
 	ignored=false
 
-	while test -n $#
+	while test $# != 0
 	do
 		case "$1" in
 		--help)
@@ -205,7 +205,7 @@ Commands:
    track     Add files to the repository and start following changes
    untrack   Remove files from the repository and stop following changes\n"
 
-if test -n $#
+if test $# != 0
 then
 	case "$1" in
 	--version)
