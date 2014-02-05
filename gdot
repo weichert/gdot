@@ -32,24 +32,19 @@ find_symlinks () {
 	return 0
 }
 
-__git () {
-	git "$@"
-	return $?
-}
-
 clean_command () {
 	# TODO: --ignored  traverse ignored files and directories
-	exit $?
+	return 0
 }
 
 deploy_command () {
 	# TODO: --clean
-	exit $?
+	return 0
 }
 
 git_command () {
-	__git "$@"
-	exit $?
+	git "$@"
+	return $?
 }
 
 #
@@ -68,15 +63,15 @@ Options:
 		case "$1" in
 		--help)
 			printf "$long_usage_string"
-			exit 0 ;;
+			return 0 ;;
 		-*|--*)
 			die "Unknown option: "$1"\n"$usage_string"" ;;
 		*)
 			die "Unknown argument: "$1"\n"$usage_string"" ;;
 		esac
 	done
-
 	git init $GIT_WORK_TREE
+	return $?
 }
 
 #
@@ -147,16 +142,16 @@ $(tput sgr0)\n"
 $(tput setaf 1)
     .screenrc
 $(tput sgr0)\n"
-	exit $?
+	return 0
 }
 
 track_command () {
-	exit $?
+	return 0
 }
 
 untrack_command () {
 	# TODO: --clean
-	exit $?
+	return 0
 }
 
 #
@@ -185,17 +180,23 @@ then
 	--help)
 		case "$2" in
 		clean)
-			clean_command --help ;;
+			clean_command --help
+			exit $?;;
 		deploy)
-			deploy_command --help ;;
+			deploy_command --help
+			exit $?;;
 		init)
-			init_command --help ;;
+			init_command --help
+			exit $?;;
 		status)
-			status_command --help ;;
+			status_command --help
+			exit $?;;
 		track)
-			track_command --help ;;
+			track_command --help
+			exit $?;;
 		untrack)
-			untrack_command --help ;;
+			untrack_command --help
+			exit $?;;
 		*)
 			printf "$long_usage_string"
 			exit 0 ;;
@@ -205,25 +206,32 @@ then
 		die "Unknown option: "$1"\n"$usage_string"" ;;
 	clean)
 		shift
-		clean_command "$@" ;;
+		clean_command "$@" 
+		exit $?;;
 	deploy)
 		shift
-		deploy_command "$@" ;;
+		deploy_command "$@"
+		exit $?;;
 	git)
 		shift
-		git_command "$@" ;;
+		git_command "$@"
+		exit $?;;
 	init)
 		shift
-		init_command "$@" ;;
+		init_command "$@"
+		exit $?;;
 	status)
 		shift
-		status_command "$@" ;;
+		status_command "$@"
+		exit $?;;
 	track)
 		shift
-		track_command "$@" ;;
+		track_command "$@"
+		exit $?;;
 	untrack)
 		shift
-		untrack_command "$@" ;;
+		untrack_command "$@"
+		exit $?;;
 	*)
 		die "gdot: '"$1"' is not a gdot command. See 'gdot --help'.\n" ;;
 	esac
