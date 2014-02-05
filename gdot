@@ -28,6 +28,32 @@ die () {
 }
 
 ls_files () {
+#
+# TODO:
+#
+# status
+# 	no-links
+# 	broken-links
+# 	moved-links
+# 	conflicts
+#
+# clean
+# 	broken-links
+# 	moved-links
+#
+#
+# mkfifo - named pipe
+#
+# find all symlinks to work tree in deploy tree
+# 	no file in work tree >> named pipe (broken symlink)
+# 	different file in work tree >> named pipe (moved symlink)
+#
+# find all files in work tree
+# 	link in deploy tree links to right file in work tree >> named pipe (valid)
+# 	no file in deploy tree >> named pipe (no symlink)
+# 	file in deploy tree not a link >> named pipe (conflict)
+# 	link in deploy tree links outside work tree >> named pipe (conflict)
+#
 	usage_string="usage: gdot ls-files [<options>...]\n"
 	long_usage_string=\
 ""$usage_string"
