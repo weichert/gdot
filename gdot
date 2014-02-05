@@ -66,7 +66,7 @@ Options:
 	full_args="$@"
 	ignored=false
 
-	while test $# != 0
+	while test -n $#
 	do
 		case "$1" in
 		--help)
@@ -151,7 +151,7 @@ Commands:
    track     Add files to the repository and start following changes
    untrack   Remove files from the repository and stop following changes\n"
 
-if test $# != 0
+if test -n $#
 then
 	case "$1" in
 	--version)
