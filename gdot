@@ -22,12 +22,14 @@ export GDOT_DEPLOY_DIR=$HOME
 export GIT_WORK_TREE=$GDOT_DEPLOY_DIR/.gdot
 export GIT_DIR=$GIT_WORK_TREE/.git
 
-# TODO: functions I might want to have:
-#       ??()  traversing the filesystem and honoring ignores
-
 die () {
 	printf "$*" >&2
 	exit 1
+}
+
+find_symlinks () {
+
+	return 0
 }
 
 __git () {
