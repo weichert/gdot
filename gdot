@@ -46,6 +46,8 @@ ls_files () {
 #
 # mkfifo - named pipe
 #
+# showing all valid links recursively is default
+#
 # find all symlinks to work tree in deploy tree
 # 	no file in work tree >> named pipe (broken symlink)
 # 	different file in work tree >> named pipe (moved symlink)
@@ -60,35 +62,71 @@ ls_files () {
 	long_usage_string=\
 ""$usage_string"
 Options:
-   --broken-links  
-   --conflicts     
-   --help          display this help
-   --moved-links   
-   --no-links      
-   --valid-links   \n"
+   --broken     
+   --conflicts  
+   --help       display this help
+   --ignored    
+   --mkfifo     
+   --moved      
+   --missing    
+   --valid      \n"
+	broken=f
+	conflicts=f
+	ignored=f
+	mkfifo=f
+	moved=f
+	missing=f
+	test $# = 0 && valid=t || valid=f
 
 	while test $# != 0
 	do
 		case "$1" in
-		--broken-links)
-			;;
+		--broken)
+			broken=t
+			shift ;;
 		--conflicts)
-			;;
+			conflicts=t
+			shift ;;
 		--help)
 			printf "$long_usage_string"
 			return 0 ;;
-		--moved-links)
-			;;
-		--no-links)
-			;;
-		--valid-links)
-			;;
+		--ignored)
+			ignored=t
+			shift ;;
+		--mkfifo)
+			mkfifo=t
+			shift ;;
+		--moved)
+			moved=t
+			shift ;;
+		--missing)
+			missing=t
+			shift ;;
+		--valid)
+			valid=t
+			shift ;;
 		-*|--*)
 			die "Unknown option: "$1"\n"$usage_string"" ;;
 		*)
 			die "Unknown argument: "$1"\n"$usage_string"" ;;
 		esac
 	done
+
+	if test $ignored = f
+	then
+		# TODO: Build $ignorepattern from .gdotignore ("! -name <LINE> ")
+	fi
+
+	if test $conflicts = t -o $missing = t -o $valid = t
+	then
+		# TODO: find . ! \( -path $GIT_DIR -prune \) -type f -o -type l $ignorepattern
+	fi
+
+	if test $broken = t -o $moved = t
+	then
+		# TODO: deploy-dir find pattern
+	fi
+
 
 	return 0
 }
