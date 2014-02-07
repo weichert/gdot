@@ -24,9 +24,15 @@ export GDOT_DEPLOY_DIR=$HOME
 export GIT_WORK_TREE=$GDOT_DEPLOY_DIR/.gdot
 export GIT_DIR=$GIT_WORK_TREE/.git
 
+set -o errexit
+set -o nounset
+
 die () {
-	printf "$*" >&2
-	exit 1
+	errcode=$1; shift
+	message="$@"
+
+	printf "$message" 1>&2
+	exit $errcode
 }
 
 ls_files () {
@@ -106,9 +112,9 @@ Options:
 			valid=t
 			shift ;;
 		-*|--*)
-			die "Unknown option: "$1"\n"$usage_string"" ;;
+			die 1 "Unknown option: "$1"\n"$usage_string"" ;;
 		*)
-			die "Unknown argument: "$1"\n"$usage_string"" ;;
+			die 1 "Unknown argument: "$1"\n"$usage_string"" ;;
 		esac
 	done
 
@@ -165,9 +171,9 @@ Options:
 			printf "$long_usage_string"
 			return 0 ;;
 		-*|--*)
-			die "Unknown option: "$1"\n"$usage_string"" ;;
+			die 1 "Unknown option: "$1"\n"$usage_string"" ;;
 		*)
-			die "Unknown argument: "$1"\n"$usage_string"" ;;
+			die 1 "Unknown argument: "$1"\n"$usage_string"" ;;
 		esac
 	done
 	__git init $GIT_WORK_TREE
@@ -200,7 +206,7 @@ Options:
 			shift
 			break ;;
 		-*|--*)
-			die "Unknown option: "$1"\n"$usage_string"" ;;
+			die 1 "Unknown option: "$1"\n"$usage_string"" ;;
 		*)
 			break ;;
 		esac
@@ -305,7 +311,7 @@ then
 		esac
 		;;
 	-*|--*)
-		die "Unknown option: "$1"\n"$usage_string"" ;;
+		die 1 "Unknown option: "$1"\n"$usage_string"" ;;
 	clean)
 		shift
 		clean "$@"
@@ -339,8 +345,8 @@ then
 		untrack "$@"
 		exit $?;;
 	*)
-		die "gdot: '"$1"' is not a gdot command. See 'gdot --help'.\n" ;;
+		die 1 "gdot: '"$1"' is not a gdot command. See 'gdot --help'.\n" ;;
 	esac
 else
-	die "$long_usage_string"
+	die 1 "$long_usage_string"
 fi
