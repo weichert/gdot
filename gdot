@@ -35,6 +35,10 @@ die () {
 	exit $errcode
 }
 
+#
+# LS-FILES COMMAND
+#
+
 ls_files () {
 #
 # TODO:
