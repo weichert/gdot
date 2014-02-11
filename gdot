@@ -39,7 +39,7 @@ die () {
 # LS-FILES COMMAND
 #
 
-ls_files () {
+cache_ls_files () {
 #
 # TODO:
 #
@@ -76,7 +76,6 @@ Options:
    --conflicts  
    --help       display this help
    --ignored    
-   --mkfifo     
    --moved      
    --missing    
    --valid      \n"
@@ -102,9 +101,6 @@ Options:
 			return 0 ;;
 		--ignored)
 			ignored=t
-			shift ;;
-		--mkfifo)
-			mkfifo=t
 			shift ;;
 		--moved)
 			moved=t
@@ -139,6 +135,11 @@ Options:
 
 
 	return 0
+}
+
+cmd_ls_files () {
+	# TODO: call __ls_files and clean up named pipes
+	:
 }
 
 clean () {
