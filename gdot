@@ -142,17 +142,17 @@ cmd_ls_files () {
 	:
 }
 
-clean () {
+cmd_clean () {
 	# TODO: --ignored  traverse ignored files and directories
 	return 0
 }
 
-deploy () {
+cmd_deploy () {
 	# TODO: --clean
 	return 0
 }
 
-__git () {
+cmd_git () {
 	git "$@"
 	return $?
 }
@@ -161,7 +161,7 @@ __git () {
 #  INIT COMMAND
 #
 
-init () {
+cmd_init () {
 	usage_string="usage: gdot init [<options>...]\n"
 	long_usage_string=\
 ""$usage_string"
@@ -189,7 +189,7 @@ Options:
 #  STATUS COMMAND
 #
 
-status () {
+cmd_status () {
 	usage_string="usage: gdot status [<options>...] [--] [<file>...]\n"
 	long_usage_string=\
 ""$usage_string"
@@ -256,11 +256,11 @@ $(tput sgr0)\n"
 	return 0
 }
 
-track () {
+cmd_track () {
 	return 0
 }
 
-untrack () {
+cmd_untrack () {
 	# TODO: --clean
 	return 0
 }
@@ -292,25 +292,25 @@ then
 		then
 			case "$2" in
 			clean)
-				clean --help
+				cmd_clean --help
 				exit $?;;
 			deploy)
-				deploy --help
+				cmd_deploy --help
 				exit $?;;
 			init)
-				init --help
+				cmd_init --help
 				exit $?;;
 			ls-files)
-				ls_files --help
+				cmd_ls_files --help
 				exit $?;;
 			status)
-				status --help
+				cmd_status --help
 				exit $?;;
 			track)
-				track --help
+				cmd_track --help
 				exit $?;;
 			untrack)
-				untrack --help
+				cmd_untrack --help
 				exit $?;;
 			*)
 				printf "$long_usage_string"
@@ -325,35 +325,35 @@ then
 		die 1 "Unknown option: "$1"\n"$usage_string"" ;;
 	clean)
 		shift
-		clean "$@"
+		cmd_clean "$@"
 		exit $?;;
 	deploy)
 		shift
-		deploy "$@"
+		cmd_deploy "$@"
 		exit $?;;
 	git)
 		shift
-		__git "$@"
+		cmd_git "$@"
 		exit $?;;
 	init)
 		shift
-		init "$@"
+		cmd_init "$@"
 		exit $?;;
 	ls-files)
 		shift
-		ls_files "$@"
+		cmd_ls_files "$@"
 		exit $?;;
 	status)
 		shift
-		status "$@"
+		cmd_status "$@"
 		exit $?;;
 	track)
 		shift
-		track "$@"
+		cmd_track "$@"
 		exit $?;;
 	untrack)
 		shift
-		untrack "$@"
+		cmd_untrack "$@"
 		exit $?;;
 	*)
 		die 1 "gdot: '"$1"' is not a gdot command. See 'gdot --help'.\n" ;;
