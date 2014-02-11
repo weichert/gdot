@@ -85,9 +85,9 @@ Options:
 	mkfifo=f
 	moved=f
 	missing=f
-	test $# = 0 && valid=t || valid=f
+	test $# -eq 0 && valid=t || valid=f
 
-	while test $# != 0
+	while test $# -gt 0
 	do
 		case "$1" in
 		--broken)
@@ -168,7 +168,7 @@ init () {
 Options:
    --help     display this help\n"
 
-	while test $# != 0
+	while test $# -gt 0
 	do
 		echo $#
 		case "$1" in
@@ -198,7 +198,7 @@ Options:
    --ignored  traverse ignored files and directories\n"
 	ignored=false
 
-	while test $# != 0
+	while test $# -gt 0
 	do
 		case "$1" in
 		--help)
@@ -281,39 +281,45 @@ Commands:
    track     Add files to the repository and start following changes
    untrack   Remove files from the repository and stop following changes\n"
 
-if test $# != 0
+if test $# -gt 0
 then
 	case "$1" in
 	--version)
 		printf "gdot version $version\n"
 		exit 0 ;;
 	--help)
-		case "$2" in
-		clean)
-			clean --help
-			exit $?;;
-		deploy)
-			deploy --help
-			exit $?;;
-		init)
-			init --help
-			exit $?;;
-		ls-files)
-			ls_files --help
-			exit $?;;
-		status)
-			status --help
-			exit $?;;
-		track)
-			track --help
-			exit $?;;
-		untrack)
-			untrack --help
-			exit $?;;
-		*)
+		if test -n "${2-}"
+		then
+			case "$2" in
+			clean)
+				clean --help
+				exit $?;;
+			deploy)
+				deploy --help
+				exit $?;;
+			init)
+				init --help
+				exit $?;;
+			ls-files)
+				ls_files --help
+				exit $?;;
+			status)
+				status --help
+				exit $?;;
+			track)
+				track --help
+				exit $?;;
+			untrack)
+				untrack --help
+				exit $?;;
+			*)
+				printf "$long_usage_string"
+				exit 0 ;;
+			esac
+		else
 			printf "$long_usage_string"
-			exit 0 ;;
-		esac
+			exit 0
+		fi
 		;;
 	-*|--*)
 		die 1 "Unknown option: "$1"\n"$usage_string"" ;;
