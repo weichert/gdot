@@ -20,8 +20,8 @@
 
 version="0.0.0"
 
-export GDOT_DEPLOY_DIR=$HOME
-export GIT_WORK_TREE=$GDOT_DEPLOY_DIR/.gdot
+export GDOT_DEPLOY_TREE=$HOME
+export GIT_WORK_TREE=$GDOT_DEPLOY_TREE/.gdot
 export GIT_DIR=$GIT_WORK_TREE/.git
 
 set -o errexit
