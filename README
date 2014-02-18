@@ -1,6 +1,17 @@
-GDOT - waiting for the dead-simple dotfile manager
-==================================================
+gdot(1)
+========
 
+NAME
+----
+gdot - waiting for the dead-simple dotfile manager
+
+SYNOPSIS
+--------
+[verse]
+'gdot' [--version] [--help] <command> [<args>]
+
+DESCRIPTION
+-----------
 Gdot is an extremely small deployment tool that uses Git as its back-end.
 It only has a few commands and relies on Git commands for most of the actual
 work.
@@ -10,9 +21,8 @@ to a git repository and creating a symbolic link in its place, and then commit
 any changes to that file as you normally would with Git.
 
 
-INSTALL
--------
-
+INSTALLATION
+------------
 At this point the only thing to do is to copy the actual `gdot` file somewhere
 in your `$PATH`. `$HOME/bin/` or `/usr/local/bin/` are good places.
 
@@ -20,62 +30,125 @@ At some later point Gdot might have an actual Makefile for this and other
 things.
 
 
-CONFIGURE
----------
-
-Gdot configuration happens in the work tree which is usually located in
-`$HOME/.gdot/`.
+CONFIGURATION
+-------------
+Gdot configuration happens in the work tree which governed by `$GIT_WORK_TREE`.
 
 `.gdotignore`::
-        should contain any files and directories you do not want to traverse.
-        Please note that this is not a safety feature and does not stop
-        `deploy` from putting files there.
-        But it does stop `status` and any `clean` from traversing the whole
-        deploy tree and as such is meant to save you time.
+	should contain any files and directories you do not want to traverse.
+	Please note that this is not a safety feature and does not stop
+	`deploy` from putting files there.
+	But it does stop `status` and any `clean` from traversing the whole
+	deploy tree and as such is meant to save you time.
 
 
-USE
----
-
+COMMANDS
+--------
 `init`::
-        will create an empty Gdot repository or reinitialize an existing one.
-        This is how you bootstrap your Gdot setup.
+	Create an empty Gdot repository or reinitialize an existing one.
+	This is how you bootstrap your Gdot setup.
 
 `status`::
-        will show you the status of the symlink setup. It will however not
-        show any changes to the content.
-        This command will traverse the whole deploy tree and as such will take
-        some time.
+	Show you the status of the symlink setup. It will however not show any
+	changes to the content.
+	This command will traverse the whole deploy tree and as such will take
+	some time.
 
 `track`::
-        will add a file to the repository and put a symlink in its place.
+	Add a file to the repository and put a symlink in its place.
 
 `untrack`::
-        will remove the file from the repository and the symlink to this file
-        and restore it to its place.
-        This command will automatically clean.
+	Remove the file from the repository and the symlink to this file and
+	restore it to its place.
+	This command will automatically clean.
 
 `deploy`::
-        will create symlinks to files in the repository if necessary.
-        You probably want to call this every time you check out or merge for
-        example.
-        This command will automatically clean.
+	Create symlinks to files in the repository if necessary.
+	You probably want to call this every time you check out or merge for
+	example.
+	This command will automatically clean.
 
 `clean`::
-        will clean the deploy tree from broken or renamed symlinks that point
-        to the repository.
-        This command will traverse the whole deploy tree and as such will take
-        some time.
+	Clean the deploy tree from broken or renamed symlinks that point to the
+	repository.
+	This command will traverse the whole deploy tree and as such will take
+	some time.
 
 `git`::
-        You will need git for anything else as the actual repository is still
-        just a regular git repository.
-        This command is a convenient wrapper that executes any command given
-        to it in the Gdot repository.
+	You will need git for anything else as the actual repository is still
+	just a regular git repository.
+	This command is a convenient wrapper that executes any command given
+	to it in the Gdot repository.
 
+CONCEPTS
+--------
 
-CONTRIBUTE
-----------
+Structure
+~~~~~~~~~
+Gdot is using two directories for reference, where root is governed by an
+environment variable:
+
+The deploy tree:: Governed by GDOT_DEPLOY_TREE
+The work tree:: Governed by GIT_WORK_TREE
+
+Files are said to correspond if they exist in the same place relative to their
+respective roots.
+
+Statuses
+~~~~~~~~
+Consistency checks test for several states a relationship can be in, which are
+as follows:
+
+valid::
+	Two corresponding files are found in the work tree and in the deploy
+	tree. The file in the deploy tree is a symbolic link to the file in
+	the work tree.
+
+conflict::
+	Two corresponding files are found in the work tree and in the deploy
+	tree. However, the file in the deploy tree is not a symbolic link to
+	the file in the work tree.
++
+Conflicts have to be resolved manually, you can choose to ...
+
+* Keep the file in the deploy tree.
+** Remove the file in the work tree.
+** Use `gdot track <file>` to track the file in the deploy tree.
+
+* Keep file in the work tree.
+** Remove the file in the deploy tree.
+** Use `gdot deploy` to update all symbolic links in your deploy tree.
+
+* Merge both files or parts of them.
+** Edit the file in the work tree to have all desired changes.
+** Remove file in the deploy tree.
+** Use `gdot git commit` to commit any changes.
+** Use `gdot deploy` to update all symbolic links in your deploy tree.
+
+broken symbolic link::
+	A symbolic link is found in the deploy tree that points to a file in
+	the work tree that does not exist there.
++
+* Use `gdot clean` to clean up invalid symbolic links in your deploy tree.
+
+moved symbolic link::
+	A symbolic link is found in the deploy tree that points to a file in
+	the work tree that does exist there. But the location of the symbolic link in the deploy tree does not correspond to the location of the file in the work tree.
++
+* Use `gdot deploy --clean` to clean up invalid symbolic links and update all symbolic links in your deploy tree.
+
+missing symbolic link::
+	A file is found in the work tree but no corresponding symbolic link is
+	found in the deploy tree.
++
+* Use `gdot deploy` to update all symbolic links in your deploy tree.
+
+== BUGS
+
+Bugs?
+
+== CONTRIBUTIONS
 
 This project follows the Git documentation unless stated otherwise.
+
 https://git.kernel.org/cgit/git/git.git/tree/Documentation
