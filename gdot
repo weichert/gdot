@@ -35,107 +35,48 @@ die () {
 	exit $errcode
 }
 
-cache_ls_files () {
+# conflicts, missing, valid
+# -----------------------
 #
-# TODO:
+# TODO: find . ! \( -path $GIT_DIR -prune \) -type f -o -type l $ignorepattern
+# mkfifo for named pipes
+# xargs to expand ignorepatterns
+# find -exec and maybe xargs to do anything with found files
 #
-# status
-# 	no-links
-# 	broken-links
-# 	moved-links
-# 	conflicts
+# broken, moved
+# ------------
 #
-# clean
-# 	broken-links
-# 	moved-links
+# TODO: deploy-dir find pattern
 #
+# ignore = $1 = t
+# ---------------
 #
-# mkfifo - named pipe
-#
-# showing all valid links recursively is default
-#
-# find all symlinks to work tree in deploy tree
-# 	no file in work tree >> named pipe (broken symlink)
-# 	different file in work tree >> named pipe (moved symlink)
-#
-# find all files in work tree
-# 	link in deploy tree links to right file in work tree >> named pipe (valid)
-# 	no file in deploy tree >> named pipe (no symlink)
-# 	file in deploy tree not a link >> named pipe (conflict)
-# 	link in deploy tree links outside work tree >> named pipe (conflict)
-#
-	usage_string="usage: gdot ls-files [<options>...]\n"
-	long_usage_string=\
-""$usage_string"
-Options:
-   --broken     
-   --conflicts  
-   --help       display this help
-   --ignored    
-   --moved      
-   --missing    
-   --valid      \n"
-	broken=f
-	conflicts=f
-	ignored=f
-	mkfifo=f
-	moved=f
-	missing=f
-	test $# -eq 0 && valid=t || valid=f
-
-	while test $# -gt 0
-	do
-		case "$1" in
-		--broken)
-			broken=t
-			shift ;;
-		--conflicts)
-			conflicts=t
-			shift ;;
-		--help)
-			printf "$long_usage_string"
-			return 0 ;;
-		--ignored)
-			ignored=t
-			shift ;;
-		--moved)
-			moved=t
-			shift ;;
-		--missing)
-			missing=t
-			shift ;;
-		--valid)
-			valid=t
-			shift ;;
-		-*|--*)
-			die 1 "Unknown option: "$1"\n"$usage_string"" ;;
-		*)
-			die 1 "Unknown argument: "$1"\n"$usage_string"" ;;
-		esac
-	done
-
-	if test $ignored = f
-	then
-		# TODO: Build $ignorepattern from .gdotignore ("! -name <LINE> ")
-	fi
-
-	if test $conflicts = t -o $missing = t -o $valid = t
-	then
-		# TODO: find . ! \( -path $GIT_DIR -prune \) -type f -o -type l $ignorepattern
-	fi
-
-	if test $broken = t -o $moved = t
-	then
-		# TODO: deploy-dir find pattern
-	fi
+# TODO: Build $ignorepattern from .gdotignore ("! -name <LINE> ")
+# sed to edit the single entries in file to complete arguments for find
 
 
-	return 0
+get_broken_files () {
+	echo broken files
 }
 
-cmd_ls_files () {
-	# TODO: call __ls_files and clean up named pipes
-	:
+get_conflicting_files () {
+	echo conflicting files
+}
+
+get_ignored_files () {
+	echo ignored files
+}
+
+get_moved_files () {
+	echo moved files
+}
+
+get_missing_files () {
+	echo missing files
+}
+
+get_valid_files () {
+	echo valid files
 }
 
 cmd_clean () {
@@ -177,6 +118,67 @@ Options:
 	return $?
 }
 
+cmd_ls_files () {
+	usage_string="usage: gdot ls-files [--ignored] [<options>...]\n"
+	long_usage_string=\
+""$usage_string"
+Files are said to correspond if they exist in the same place relative to their
+respective roots \$GDOT_DEPLOY_TREE and \$GIT_WORK_TREE.
+
+Options:
+   --broken     Show all symbolic links in the deploy tree that point to a file
+                that does not exist in the work tree.
+   --conflicts  Show all files in the deploy tree that correspond to a file in
+                the work tree but are not symbolic links to this file.
+   --help       Display this help.
+   --ignored    Show ignored files as well.
+   --moved      Show all symbolic links in the deploy tree that do not
+                correspond to a file in the work tree but still point to it.
+   --missing    Show all files in the work tree that have no symbolic link
+                pointing to them in the deploy tree.
+   --valid      Show all valid symbolic links.
+                This is the default if no argument is given.\n"
+	ignored=f
+
+	if test $# -eq 0
+	then
+		get_valid_files
+		return 0
+	fi
+
+	while test $# -gt 0
+	do
+		case "$1" in
+		--broken)
+			get_broken_files $ignored
+			shift ;;
+		--conflicts)
+			get_conflicting_files $ignored
+			shift ;;
+		--help)
+			printf "$long_usage_string"
+			return 0 ;;
+		--ignored)
+			ignored=t
+			shift ;;
+		--moved)
+			get_moved_files $ignored
+			shift ;;
+		--missing)
+			get_missing_files $ignored
+			shift ;;
+		--valid)
+			get_valid_files $ignored
+			shift ;;
+		-*|--*)
+			die 1 "Unknown option: "$1"\n"$usage_string"" ;;
+		*)
+			die 1 "Unknown argument: "$1"\n"$usage_string"" ;;
+		esac
+	done
+
+	return 0
+}
 
 cmd_status () {
 	usage_string="usage: gdot status [<options>...] [--] [<file>...]\n"
