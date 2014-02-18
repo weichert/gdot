@@ -102,7 +102,7 @@ cmd_init () {
 	long_usage_string=\
 ""$usage_string"
 Options:
-   --help     display this help\n"
+   --help     Display this help.\n"
 
 	while test $# -gt 0
 	do
@@ -188,8 +188,8 @@ cmd_status () {
 	long_usage_string=\
 ""$usage_string"
 Options:
-   --help     display this help
-   --ignored  traverse ignored files and directories\n"
+   --help     Display this help.
+   --ignored  Show ignored files as well.\n"
 	ignored=false
 
 	while test $# -gt 0
@@ -269,13 +269,13 @@ usage_string="usage: gdot [--version] [--help] <command> [<args>]\n"
 long_usage_string=\
 ""$usage_string"
 Commands:
-   clean     Clean deployment tree from broken or renamed symlinks
-   deploy    Deploy a working tree into the deployment tree
-   git       Executes any git command given to it in the gdot repository
-   init      Create an empty gdot repository
-   status    Show the deployment tree status
-   track     Add files to the repository and start following changes
-   untrack   Remove files from the repository and stop following changes\n"
+   clean     Clean deployment tree from broken or renamed symlinks.
+   deploy    Deploy a working tree into the deployment tree.
+   git       Executes any git command given to it in the gdot repository.
+   init      Create an empty gdot repository.
+   status    Show the deployment tree status.
+   track     Add files to the repository and start following changes.
+   untrack   Remove files from the repository and stop following changes.\n"
 
 if test $# -gt 0
 then
