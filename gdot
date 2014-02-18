@@ -93,6 +93,7 @@ cmd_deploy () {
 }
 
 cmd_git () {
+	# TODO: sanity checks about git version and such things if necessary
 	git "$@"
 	return $?
 }
