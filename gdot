@@ -81,6 +81,9 @@ get_valid_files () {
 
 cmd_clean () {
 	# TODO: --ignored  traverse ignored files and directories
+	#
+	#       broken-links
+	#       moved-links
 	return 0
 }
 
@@ -210,6 +213,12 @@ Options:
 
 	# TODO: Mockup to learn about terminfo stuff and understand what you
 	#       would want from the UI
+	#
+	#       no-links
+	#       broken-links
+	#       moved-links
+	#       conflicts
+
 
 	printf \
 "No symbolic links found:
