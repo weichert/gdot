@@ -35,10 +35,6 @@ die () {
 	exit $errcode
 }
 
-#
-# LS-FILES COMMAND
-#
-
 cache_ls_files () {
 #
 # TODO:
@@ -157,10 +153,6 @@ cmd_git () {
 	return $?
 }
 
-#
-#  INIT COMMAND
-#
-
 cmd_init () {
 	usage_string="usage: gdot init [<options>...]\n"
 	long_usage_string=\
@@ -185,9 +177,6 @@ Options:
 	return $?
 }
 
-#
-#  STATUS COMMAND
-#
 
 cmd_status () {
 	usage_string="usage: gdot status [<options>...] [--] [<file>...]\n"
@@ -264,10 +253,6 @@ cmd_untrack () {
 	# TODO: --clean
 	return 0
 }
-
-#
-#  MAIN UI ROUTER
-#
 
 usage_string="usage: gdot [--version] [--help] <command> [<args>]\n"
 long_usage_string=\
